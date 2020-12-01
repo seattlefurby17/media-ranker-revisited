@@ -8,7 +8,8 @@ class User < ApplicationRecord
     user = User.new
     user.uid = auth_hash[:uid]
     user.provider = 'github'
-    user.name = auth_hash['info']['nickname']
+    user.name = auth_hash['info']['nickname'] # because I have both username and name, validation requires username to not be nil.
+    user.username = auth_hash['info']['nickname']
     user.email = auth_hash['info']['email']
     return user
   end

@@ -12,15 +12,18 @@ class UsersController < ApplicationController
     auth_hash = request.env['omniauth.auth'] 
     user = User.find_by(uid: auth_hash[:uid], provider: 'github')
     if user # existing user
-      flash[:success] = "Welcome back returning user #{user.username}"
+      flash[:status] = :success
+      flash[:result_text] = "Welcome back user #{user.username}"
     else
       # User doesn't exist in the DB
       # Attempt to create a new user
       user = User.build_from_github(auth_hash)
       if user.save
-        flash[:success] = "Hola new user #{user.username}" 
+        flash[:status] = :success
+        flash[:result_text] = "Hola new user #{user.username}" 
       else # Display error - easier debugging
-        flash[:error] = "Could not create a new user account: #{user.errors.messages}" 
+        flash[:status] = :failure
+        flash[:result_text] = "Could not create a new user account: #{user.errors.messages}" 
         redirect_to root_path
         return
       end
@@ -33,9 +36,16 @@ class UsersController < ApplicationController
   end
 
   def destroy # same as logout
-    session[:user_id] = nill
-    flash[:success] = "Successfully logged out"
+    if session[:user_id]
+      session[:user_id] = nil
+      flash[:status] = :success
+      flash[:result_text] = "Successfully logged out"
+    else
+      flash[:status] = :failure
+      flash[:result_text] = "You were not logged in!"
+    end
     redirect_to root_path
+    return
   end
 
   # def login_form

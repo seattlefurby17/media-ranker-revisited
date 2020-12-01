@@ -3,7 +3,7 @@ require "test_helper"
 describe User do
   describe "relations" do
     it "has a list of votes" do
-      dan = users(:dan)
+      dan = users(:ada)
       expect(dan).must_respond_to :votes
       dan.votes.each do |vote|
         expect(vote).must_be_kind_of Vote
@@ -11,7 +11,7 @@ describe User do
     end
 
     it "has a list of ranked works" do
-      dan = users(:dan)
+      dan = users(:grace)
       expect(dan).must_respond_to :ranked_works
       dan.ranked_works.each do |work|
         expect(work).must_be_kind_of Work
